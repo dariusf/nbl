@@ -29,8 +29,14 @@ object Parser {
   val identifier: P[Identifier] = P(CharIn('a' to 'z').rep(1).!.filter(!keywords.contains(_)).map(x => Identifier(x)))
   val bool: P[Boolean] = P("true" | "false").!.map(b => Boolean(b.equals("true")))
 
+  val string: P[Str] = P( delimitedString("'") | delimitedString("\"") ).map(Str)
+  def delimitedString(delimiter: String) = P( delimiter ~ stringItem(delimiter).rep.! ~ delimiter)
+  def stringItem(quote: String): P0 = P( stringChar(quote) | escape )
+  def stringChar(quote: String): P0 = P( CharsWhile(!s"\\\n${quote(0)}".contains(_)) )
+  val escape: P0 = P( "\\" ~ AnyChar )
+
   lazy val parens: P[Expr] = P("(" ~/ expr ~/ ")")
-  lazy val simple_exp: P[Expr] = P(number | bool | identifier | parens)
+  lazy val simple_exp: P[Expr] = P(number | bool | identifier | string | parens)
 
   lazy val funApply = P(simple_exp ~/ ("(" ~/ expr ~/ ")").?).map {
     case (e, Some(e1)) => FunApply(e, e1)

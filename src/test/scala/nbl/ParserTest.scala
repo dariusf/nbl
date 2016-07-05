@@ -9,6 +9,13 @@ import org.scalatest.FunSuite
   * Created by nos on 6/29/16.
   */
 class ParserTest extends FunSuite {
+
+  test("Strings") {
+    val parsed = Parser.parse("\"a\\nb\\\"\"")
+    val Success(ast, _) = parsed
+    assert(ast == Str("a\\nb\\\""))
+  }
+
   test("Binary operation precedence") {
     val Success(ast, _) = Parser.parse("4+3*2")
     assert(ast == BinOp(Add, Integer(4), BinOp(Multiply, Integer(3), Integer(2))))

@@ -13,6 +13,8 @@ object Ast {
 
     case class Boolean(value: java.lang.Boolean) extends Value
 
+    case class Str(value: String) extends Value
+
     case class Integer(value: Int) extends Value
 
     case class Closure(fun: Fun, env: ClosureEnv) extends Value
@@ -34,6 +36,8 @@ object Ast {
     case class Integer(value: Int) extends Expr
 
     case class Boolean(value: java.lang.Boolean) extends Expr
+
+    case class Str(value: String) extends Expr
 
     case class IfElse(conditional: Expr, thenBranch: Expr, elseBranch: Expr) extends Expr
 
